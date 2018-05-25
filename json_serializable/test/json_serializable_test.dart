@@ -604,24 +604,38 @@ abstract class _$SubTypeSerializerMixin {
     expect(output, expected);
   });
 
-  group('default values', () {
-    test('fail with symbols', () {
-      expectThrows(
-          'DefaultWithSymbol',
-          'Error with `@JsonKey` on `field`. '
-          'Values of type `Symbol` are not supported for `defaultValue`.');
+  if (!generator.useWrappers) {
+    group('default values', () {
+      test('fail with symbols', () {
+        expectThrows(
+            'DefaultWithSymbol',
+            'Error with `@JsonKey` on `field`. '
+            '`defaultValue` is `Symbol`, it must be a literal.');
+      });
+      test('fail with functions', () {
+        expectThrows(
+            'DefaultWithFunction',
+            'Error with `@JsonKey` on `field`. '
+            '`defaultValue` is `Function`, it must be a literal.');
+      });
+      test('fail with type', () {
+        expectThrows(
+            'DefaultWithType',
+            'Error with `@JsonKey` on `field`. '
+            '`defaultValue` is `Type`, it must be a literal.');
+      });
+      test('fail with const object', () {
+        expectThrows(
+            'DefaultWithConstObject',
+            'Error with `@JsonKey` on `field`. '
+            '`defaultValue` is `Duration`, it must be a literal.');
+      });
+      test('fail with enum value', () {
+        expectThrows(
+            'DefaultWithEnum',
+            'Error with `@JsonKey` on `field`. '
+            '`defaultValue` is `Enum`, it must be a literal.');
+      });
     });
-    test('fail with functions', () {
-      expectThrows(
-          'DefaultWithFunction',
-          'Error with `@JsonKey` on `field`. '
-          'The provided `defaultValue` is not a literal: () → int (_function)');
-    });
-    test('fail with type', () {
-      expectThrows(
-          'DefaultWithType',
-          'Error with `@JsonKey` on `field`. '
-          'Values of type `Type` are not supported for `defaultValue`.');
-    });
-  });
+  }
 }

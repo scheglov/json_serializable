@@ -52,15 +52,21 @@ JsonKeyWithConversion _from(FieldElement element) {
 
     var reader = new ConstantReader(dartObject);
 
+    String badType;
     if (reader.isSymbol) {
-      _throwUnsupported(element,
-          'Values of type `Symbol` are not supported for `defaultValue`.');
+      badType = 'Symbol';
     } else if (reader.isType) {
-      _throwUnsupported(element,
-          'Values of type `Type` are not supported for `defaultValue`.');
+      badType = 'Type';
+    } else if (dartObject.type is FunctionType) {
+      // TODO(kevmoo): Support calling function for the default value?
+      badType = 'Function';
     } else if (!reader.isLiteral) {
+      badType = dartObject.type.name;
+    }
+
+    if (badType != null) {
       _throwUnsupported(
-          element, 'The provided `defaultValue` is not a literal: $dartObject');
+          element, '`defaultValue` is `$badType`, it must be a literal.');
     }
 
     var literal = reader.literalValue;
