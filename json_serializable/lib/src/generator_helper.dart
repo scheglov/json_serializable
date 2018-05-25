@@ -382,34 +382,33 @@ class ${_wrapperClassName(true)} extends \$JsonMapWrapper {
   String _deserializeForField(FieldElement field,
       {ParameterElement ctorParam, bool checkedProperty}) {
     checkedProperty ??= false;
-    var defaultValue = jsonKeyFor(field).defaultValue;
     var jsonKeyName = _safeNameAccess(field);
 
     var targetType = ctorParam?.type ?? field.type;
 
+    String value;
     try {
       if (_generator.checked) {
-        // TODO: default value fun here!
-        var value = _getHelperContext(field).deserialize(targetType, 'v');
-        if (checkedProperty) {
-          return value;
+        value = _getHelperContext(field).deserialize(targetType, 'v');
+        if (!checkedProperty) {
+          value = '\$checkedConvert(json, $jsonKeyName, (v) => $value)';
         }
+      } else {
+        assert(!checkedProperty,
+            'should only be true if `_generator.checked` is true.');
 
-        return '\$checkedConvert(json, $jsonKeyName, (v) => $value)';
+        value = _getHelperContext(field)
+            .deserialize(targetType, 'json[$jsonKeyName]');
       }
-      assert(!checkedProperty,
-          'should only be true if `_generator.checked` is true.');
-
-      var value = _getHelperContext(field)
-          .deserialize(targetType, 'json[$jsonKeyName]');
-
-      if (defaultValue != null) {
-        value = '$value ?? $defaultValue';
-      }
-      return value;
     } on UnsupportedTypeError catch (e) {
       throw _createInvalidGenerationError('fromJson', field, e);
     }
+
+    var defaultValue = jsonKeyFor(field).defaultValue;
+    if (defaultValue != null) {
+      value = '$value ?? $defaultValue';
+    }
+    return value;
   }
 
   TypeHelperContext _getHelperContext(FieldElement field) {

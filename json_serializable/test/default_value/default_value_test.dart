@@ -5,7 +5,9 @@
 import 'package:test/test.dart';
 
 import '../test_utils.dart';
-import 'default_value.dart';
+import 'default_value.checked.dart' as checked;
+import 'default_value.dart' as normal;
+import 'default_value_interface.dart';
 
 const _defaultInstance = const {
   'fieldBool': true,
@@ -36,16 +38,21 @@ const _otherValues = const {
 };
 
 void main() {
+  group('nullable', () => _test(normal.fromJson));
+  group('non-nullable', () => _test(checked.fromJson));
+}
+
+void _test(DefaultValue fromJson(Map<String, dynamic> json)) {
   test('empty map yields all default values', () {
-    var object = new DefaultValue.fromJson({});
+    var object = fromJson({});
     expect(loudEncode(object), loudEncode(_defaultInstance));
   });
   test('default value input round-trips', () {
-    var object = new DefaultValue.fromJson(_defaultInstance);
+    var object = fromJson(_defaultInstance);
     expect(loudEncode(object), loudEncode(_defaultInstance));
   });
   test('non-default values round-trip', () {
-    var object = new DefaultValue.fromJson(_otherValues);
+    var object = fromJson(_otherValues);
     expect(loudEncode(object), loudEncode(_otherValues));
   });
 }

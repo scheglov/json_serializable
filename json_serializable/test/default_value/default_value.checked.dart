@@ -5,19 +5,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
-// Generator: _NonNullableGenerator
+// Generator: _CheckedGenerator
 // **************************************************************************
 
 // ignore_for_file: annotate_overrides
 
 import 'package:json_annotation/json_annotation.dart';
 
-part 'default_value.non_nullable.g.dart';
+import 'default_value_interface.dart' as dvi;
+
+part 'default_value.checked.g.dart';
 
 const _intValue = 42;
 
-@JsonSerializable(nullable: false)
-class DefaultValue extends Object with _$DefaultValueSerializerMixin {
+dvi.DefaultValue fromJson(Map<String, dynamic> json) =>
+    new DefaultValue.fromJson(json);
+
+@JsonSerializable()
+class DefaultValue extends Object
+    with _$DefaultValueSerializerMixin
+    implements dvi.DefaultValue {
   @JsonKey(defaultValue: true)
   bool fieldBool;
 

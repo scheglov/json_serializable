@@ -6,12 +6,19 @@
 
 import 'package:json_annotation/json_annotation.dart';
 
+import 'default_value_interface.dart' as dvi;
+
 part 'default_value.g.dart';
 
 const _intValue = 42;
 
+dvi.DefaultValue fromJson(Map<String, dynamic> json) =>
+    new DefaultValue.fromJson(json);
+
 @JsonSerializable()
-class DefaultValue extends Object with _$DefaultValueSerializerMixin {
+class DefaultValue extends Object
+    with _$DefaultValueSerializerMixin
+    implements dvi.DefaultValue {
   @JsonKey(defaultValue: true)
   bool fieldBool;
 
