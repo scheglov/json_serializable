@@ -13,7 +13,7 @@ import 'package:source_gen/source_gen.dart';
 import 'json_literal_generator.dart';
 
 @alwaysThrows
-T _throwUnsupported<T>(FieldElement element, String message) =>
+void throwUnsupported(FieldElement element, String message) =>
     throw new InvalidGenerationSourceError(
         'Error with `@JsonKey` on `${element.name}`. $message',
         element: element);
@@ -65,7 +65,7 @@ JsonKeyWithConversion _from(FieldElement element) {
     }
 
     if (badType != null) {
-      _throwUnsupported(
+      throwUnsupported(
           element, '`defaultValue` is `$badType`, it must be a literal.');
     }
 
@@ -78,7 +78,7 @@ JsonKeyWithConversion _from(FieldElement element) {
       return literal
           .map((k, v) => new MapEntry(_getLiteral(k), _getLiteral(v)));
     }
-    _throwUnsupported(
+    throwUnsupported(
         element, 'The provided value is not supported: $dartObject');
   }
 
@@ -136,7 +136,7 @@ ConvertData _getFunctionName(
   var type = objectValue.type as FunctionType;
 
   if (type.element is MethodElement) {
-    _throwUnsupported(
+    throwUnsupported(
         element,
         'The function provided for `$paramName` must be top-level. '
         'Static class methods (`${type.element.name}`) are not supported.');
@@ -146,7 +146,7 @@ ConvertData _getFunctionName(
   if (functionElement.parameters.isEmpty ||
       functionElement.parameters.first.isNamed ||
       functionElement.parameters.where((pe) => !pe.isOptional).length > 1) {
-    _throwUnsupported(
+    throwUnsupported(
         element,
         'The `$paramName` function `${functionElement.name}` must have one '
         'positional paramater.');
@@ -161,7 +161,7 @@ ConvertData _getFunctionName(
       // to the `fromJson` function.
       // TODO: consider adding error checking here if there is confusion.
     } else if (!returnType.isAssignableTo(element.type)) {
-      _throwUnsupported(
+      throwUnsupported(
           element,
           'The `$paramName` function `${functionElement.name}` return type '
           '`$returnType` is not compatible with field type `${element.type}`.');
@@ -172,7 +172,7 @@ ConvertData _getFunctionName(
       // to the `fromJson` function.
       // TODO: consider adding error checking here if there is confusion.
     } else if (!element.type.isAssignableTo(argType)) {
-      _throwUnsupported(
+      throwUnsupported(
           element,
           'The `$paramName` function `${functionElement.name}` argument type '
           '`$argType` is not compatible with field type'

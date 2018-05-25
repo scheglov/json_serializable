@@ -605,36 +605,48 @@ abstract class _$SubTypeSerializerMixin {
   });
 
   if (!generator.useWrappers) {
-    group('default values', () {
-      test('fail with symbols', () {
+    group('default values fail with', () {
+      test('symbols', () {
         expectThrows(
             'DefaultWithSymbol',
             'Error with `@JsonKey` on `field`. '
             '`defaultValue` is `Symbol`, it must be a literal.');
       });
-      test('fail with functions', () {
+      test('functions', () {
         expectThrows(
             'DefaultWithFunction',
             'Error with `@JsonKey` on `field`. '
             '`defaultValue` is `Function`, it must be a literal.');
       });
-      test('fail with type', () {
+      test('type', () {
         expectThrows(
             'DefaultWithType',
             'Error with `@JsonKey` on `field`. '
             '`defaultValue` is `Type`, it must be a literal.');
       });
-      test('fail with const object', () {
+      test('const object', () {
         expectThrows(
             'DefaultWithConstObject',
             'Error with `@JsonKey` on `field`. '
             '`defaultValue` is `Duration`, it must be a literal.');
       });
-      test('fail with enum value', () {
+      test('enum value', () {
         expectThrows(
             'DefaultWithEnum',
             'Error with `@JsonKey` on `field`. '
             '`defaultValue` is `Enum`, it must be a literal.');
+      });
+      test('non-nullable field', () {
+        expectThrows(
+            'DefaultWithNonNullableField',
+            'Error with `@JsonKey` on `field`. '
+            'Cannot use `defaultValue` on a field with `nullable` false.');
+      });
+      test('non-nullable class', () {
+        expectThrows(
+            'DefaultWithNonNullableClass',
+            'Error with `@JsonKey` on `field`. '
+            'Cannot use `defaultValue` on a field with `nullable` false.');
       });
     });
   }

@@ -383,13 +383,13 @@ class ${_wrapperClassName(true)} extends \$JsonMapWrapper {
       {ParameterElement ctorParam, bool checkedProperty}) {
     checkedProperty ??= false;
     var jsonKeyName = _safeNameAccess(field);
-
     var targetType = ctorParam?.type ?? field.type;
+    var contextHelper = _getHelperContext(field);
 
     String value;
     try {
       if (_generator.checked) {
-        value = _getHelperContext(field).deserialize(targetType, 'v');
+        value = contextHelper.deserialize(targetType, 'v');
         if (!checkedProperty) {
           value = '\$checkedConvert(json, $jsonKeyName, (v) => $value)';
         }
@@ -397,8 +397,7 @@ class ${_wrapperClassName(true)} extends \$JsonMapWrapper {
         assert(!checkedProperty,
             'should only be true if `_generator.checked` is true.');
 
-        value = _getHelperContext(field)
-            .deserialize(targetType, 'json[$jsonKeyName]');
+        value = contextHelper.deserialize(targetType, 'json[$jsonKeyName]');
       }
     } on UnsupportedTypeError catch (e) {
       throw _createInvalidGenerationError('fromJson', field, e);
@@ -406,6 +405,11 @@ class ${_wrapperClassName(true)} extends \$JsonMapWrapper {
 
     var defaultValue = jsonKeyFor(field).defaultValue;
     if (defaultValue != null) {
+      if (!contextHelper.nullable) {
+        throwUnsupported(field,
+            'Cannot use `defaultValue` on a field with `nullable` false.');
+      }
+
       value = '$value ?? $defaultValue';
     }
     return value;

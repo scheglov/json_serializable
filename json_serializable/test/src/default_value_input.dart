@@ -48,4 +48,18 @@ class DefaultWithEnum {
   DefaultWithEnum();
 }
 
-// TODO: nullable-false + default value
+@JsonSerializable()
+class DefaultWithNonNullableField {
+  @JsonKey(defaultValue: 42, nullable: false)
+  Object field;
+
+  DefaultWithNonNullableField();
+}
+
+@JsonSerializable(nullable: false)
+class DefaultWithNonNullableClass {
+  @JsonKey(defaultValue: 42)
+  Object field;
+
+  DefaultWithNonNullableClass();
+}
