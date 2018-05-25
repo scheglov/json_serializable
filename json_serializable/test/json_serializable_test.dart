@@ -630,12 +630,6 @@ abstract class _$SubTypeSerializerMixin {
             'Error with `@JsonKey` on `field`. '
             '`defaultValue` is `Duration`, it must be a literal.');
       });
-      test('enum value', () {
-        expectThrows(
-            'DefaultWithEnum',
-            'Error with `@JsonKey` on `field`. '
-            '`defaultValue` is `Enum`, it must be a literal.');
-      });
       test('non-nullable field', () {
         expectThrows(
             'DefaultWithNonNullableField',

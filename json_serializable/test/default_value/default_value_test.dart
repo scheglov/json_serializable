@@ -19,8 +19,9 @@ const _defaultInstance = const {
   'fieldListSimple': const [1, 2, 3],
   'fieldMapSimple': const <String, dynamic>{'answer': 42},
   'fieldMapListString': const {
-    'root': const ['child']
+    'root': const ['gamma']
   },
+  'fieldEnum': 'beta'
 };
 
 const _otherValues = const {
@@ -33,8 +34,9 @@ const _otherValues = const {
   'fieldListSimple': const [4, 5, 6],
   'fieldMapSimple': const <String, dynamic>{},
   'fieldMapListString': const {
-    'root2': const ['child1', 'child2']
+    'root2': const ['alpha']
   },
+  'fieldEnum': 'delta'
 };
 
 void main() {

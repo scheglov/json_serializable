@@ -17,5 +17,8 @@ abstract class DefaultValue {
   Map fieldMapEmpty;
   List<int> fieldListSimple;
   Map<String, int> fieldMapSimple;
-  Map<String, List<String>> fieldMapListString;
+  Map<String, List<Greek>> fieldMapListString;
+  Greek fieldEnum;
 }
+
+enum Greek { alpha, beta, gamma, delta }

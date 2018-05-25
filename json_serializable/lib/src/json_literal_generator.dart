@@ -5,7 +5,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:path/path.dart' as p;
 import 'package:source_gen/source_gen.dart';
@@ -32,7 +34,7 @@ class JsonLiteralGenerator extends GeneratorForAnnotation<JsonLiteral> {
 
     var asConst = annotation.read('asConst').boolValue;
 
-    var thing = jsonLiteralAsDart(content, asConst).toString();
+    var thing = jsonLiteralAsDart(content, asConst, false).toString();
     var marked = asConst ? 'const' : 'final';
 
     return '$marked _\$${element.name}JsonLiteral = $thing;';
@@ -43,7 +45,7 @@ class JsonLiteralGenerator extends GeneratorForAnnotation<JsonLiteral> {
 ///
 /// If [asConst] is `true`, the returned [String] is encoded as a `const`
 /// literal.
-String jsonLiteralAsDart(dynamic value, bool asConst) {
+String jsonLiteralAsDart(dynamic value, bool asConst, bool allowEnums) {
   if (value == null) return 'null';
 
   if (value is String) return escapeDartString(value);
@@ -51,11 +53,26 @@ String jsonLiteralAsDart(dynamic value, bool asConst) {
   if (value is bool || value is num) return value.toString();
 
   if (value is List) {
-    var listItems = value.map((v) => jsonLiteralAsDart(v, asConst)).join(', ');
+    var listItems =
+        value.map((v) => jsonLiteralAsDart(v, asConst, allowEnums)).join(', ');
     return '${asConst ? 'const' : ''}[$listItems]';
   }
 
   if (value is Map<String, dynamic>) return jsonMapAsDart(value, asConst);
+
+  if (value is DartObject) {
+    if (isEnum(value.type)) {
+      var interfaceType = value.type as InterfaceType;
+
+      var allowedValues = interfaceType.accessors
+          .where((p) => p.returnType == interfaceType)
+          .map((p) => p.name)
+          .toList();
+
+      var enumValueIndex = value.getField('index').toIntValue();
+      return '${interfaceType.name}.${allowedValues[enumValueIndex]}';
+    }
+  }
 
   throw new StateError(
       'Should never get here – with ${value.runtimeType} - `$value`.');
@@ -77,7 +94,7 @@ String jsonMapAsDart(Map<String, dynamic> value, bool asConst) {
     }
     buffer.write(escapeDartString(k));
     buffer.write(': ');
-    buffer.write(jsonLiteralAsDart(v, asConst));
+    buffer.write(jsonLiteralAsDart(v, asConst, false));
   });
 
   buffer.write('}');

@@ -11,6 +11,7 @@ import 'package:meta/meta.dart' show alwaysThrows;
 import 'package:source_gen/source_gen.dart';
 
 import 'json_literal_generator.dart';
+import 'utils.dart';
 
 @alwaysThrows
 void throwUnsupported(FieldElement element, String message) =>
@@ -50,6 +51,10 @@ JsonKeyWithConversion _from(FieldElement element) {
       return null;
     }
 
+    if (isEnum(dartObject.type)) {
+      return dartObject;
+    }
+
     var reader = new ConstantReader(dartObject);
 
     String badType;
@@ -85,7 +90,7 @@ JsonKeyWithConversion _from(FieldElement element) {
   var defaultValueLiteral = _getLiteral(obj.getField('defaultValue'));
 
   if (defaultValueLiteral != null) {
-    defaultValueLiteral = jsonLiteralAsDart(defaultValueLiteral, false);
+    defaultValueLiteral = jsonLiteralAsDart(defaultValueLiteral, false, true);
   }
 
   return new JsonKeyWithConversion._(

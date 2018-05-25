@@ -6,14 +6,15 @@
 
 import 'package:json_annotation/json_annotation.dart';
 
-import 'default_value_interface.dart' as dvi;
+import 'default_value_interface.dart' as dvi hide Greek;
+import 'default_value_interface.dart' show Greek;
 
 part 'default_value.g.dart';
 
 const _intValue = 42;
 
 dvi.DefaultValue fromJson(Map<String, dynamic> json) =>
-    new DefaultValue.fromJson(json);
+    _$DefaultValueFromJson(json);
 
 @JsonSerializable()
 class DefaultValue extends Object
@@ -44,9 +45,12 @@ class DefaultValue extends Object
   Map<String, int> fieldMapSimple;
 
   @JsonKey(defaultValue: {
-    'root': ['child']
+    'root': [Greek.gamma]
   })
-  Map<String, List<String>> fieldMapListString;
+  Map<String, List<Greek>> fieldMapListString;
+
+  @JsonKey(defaultValue: Greek.beta)
+  Greek fieldEnum;
 
   DefaultValue();
 

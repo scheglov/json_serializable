@@ -40,11 +40,21 @@ DefaultValue _$DefaultValueFromJson(Map json) =>
           json,
           'fieldMapListString',
           (v) => val.fieldMapListString = (v as Map)?.map((k, e) =>
-                  new MapEntry(k as String,
-                      (e as List)?.map((e) => e as String)?.toList())) ??
+                  new MapEntry(
+                      k as String,
+                      (e as List)
+                          ?.map((e) => $enumDecodeNullable(
+                              'Greek', Greek.values, e as String))
+                          ?.toList())) ??
               {
-                'root': ['child']
+                'root': [Greek.gamma]
               });
+      $checkedConvert(
+          json,
+          'fieldEnum',
+          (v) => val.fieldEnum =
+              $enumDecodeNullable('Greek', Greek.values, v as String) ??
+                  Greek.beta);
       return val;
     });
 
@@ -57,7 +67,8 @@ abstract class _$DefaultValueSerializerMixin {
   Map<dynamic, dynamic> get fieldMapEmpty;
   List<int> get fieldListSimple;
   Map<String, int> get fieldMapSimple;
-  Map<String, List<String>> get fieldMapListString;
+  Map<String, List<Greek>> get fieldMapListString;
+  Greek get fieldEnum;
   Map<String, dynamic> toJson() => <String, dynamic>{
         'fieldBool': fieldBool,
         'fieldString': fieldString,
@@ -67,6 +78,12 @@ abstract class _$DefaultValueSerializerMixin {
         'fieldMapEmpty': fieldMapEmpty,
         'fieldListSimple': fieldListSimple,
         'fieldMapSimple': fieldMapSimple,
-        'fieldMapListString': fieldMapListString
+        'fieldMapListString': fieldMapListString?.map((k, e) => new MapEntry(
+            k,
+            e
+                ?.map((e) => e == null ? null : e.toString().split('.')[1])
+                ?.toList())),
+        'fieldEnum':
+            fieldEnum == null ? null : fieldEnum.toString().split('.')[1]
       };
 }

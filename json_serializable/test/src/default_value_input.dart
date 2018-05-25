@@ -38,16 +38,6 @@ class DefaultWithConstObject {
   DefaultWithConstObject();
 }
 
-enum Enum { value }
-
-@JsonSerializable()
-class DefaultWithEnum {
-  @JsonKey(defaultValue: Enum.value)
-  Object field;
-
-  DefaultWithEnum();
-}
-
 @JsonSerializable()
 class DefaultWithNonNullableField {
   @JsonKey(defaultValue: 42, nullable: false)
