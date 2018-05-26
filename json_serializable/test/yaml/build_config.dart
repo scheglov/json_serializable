@@ -30,6 +30,8 @@ class Builder extends Object with _$BuilderSerializerMixin {
   @JsonKey(name: 'auto_apply', toJson: _toJson, fromJson: _fromJson)
   final AutoApply autoApply;
 
+  final AutoApply defaultEnumTest;
+
   @JsonKey(name: 'builder_factories', nullable: false)
   final List<String> builderFactories;
 
@@ -47,6 +49,7 @@ class Builder extends Object with _$BuilderSerializerMixin {
     this.target,
     this.isOptional,
     this.autoApply,
+    this.defaultEnumTest,
     this.builderFactories,
     this.appliesBuilders,
     this.requiredInputs,
