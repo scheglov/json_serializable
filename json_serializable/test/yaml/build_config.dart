@@ -66,8 +66,8 @@ class Builder extends Object with _$BuilderSerializerMixin {
 
 enum AutoApply { none, dependents, allPackages, rootPackage }
 
-//TODO: remove all of this and annotate the fields on the enum once we have
-//pkg:analyzer with github.com/dart-lang/sdk/commit/74db253d34
+// TODO: remove all of this and annotate the fields on the enum – once we have
+// https://github.com/dart-lang/json_serializable/issues/38
 AutoApply _fromJson(String input) {
   var value = _autoApplyConvert[input];
   if (value == null) {
